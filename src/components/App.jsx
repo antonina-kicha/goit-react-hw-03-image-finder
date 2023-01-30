@@ -6,18 +6,20 @@ import { GlobalStyle } from './GlobalStyle';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Button } from './Button/Button'
-import {Loader} from './Loader/Loader'
+import { Loader } from './Loader/Loader'
+import {Modal} from './Modal/Modal'
 
 
 export class App extends Component {
-    
     state = {
         searchQuery: '',
         page: 1,
         loadNextPage: false,
         isLoading: false,
         images: [],
+        currentImage: [],
         error: null,
+        modalIsOpen: false,
     }
     
     handleSubmitForm = (value) => {
@@ -25,7 +27,7 @@ export class App extends Component {
             this.getImagesOnRequest();
         })
         }
-        else { this.setState({ error: `Введите запрос в строку поиска` }) }
+        else { this.setState({ error: `Введите запрос в строку поиска`, images: [], loadNextPage: false }) }
         ;
     }
 
@@ -41,6 +43,22 @@ export class App extends Component {
         if (responceImage.length === 12) { this.setState({ loadNextPage: true }) }
     }
 
+    openModal = (id) => {
+        this.setState({ modalIsOpen: true });
+        this.getLargeImageInfo(id);
+    }
+
+    closeModal = () => {
+        this.setState({ modalIsOpen: false, currentImage: [] });
+    }
+
+    getLargeImageInfo = (id) => {
+        const currentImage = this.state.images.find(image => Number(image.id) === Number(id));
+        const largeImageUrl = currentImage.largeImageURL;
+        const imageAlt = currentImage.tags;
+        this.setState({ currentImage: [largeImageUrl, imageAlt] });
+    }
+
     async getImagesOnRequest(isLoadMore = false) {
         try {
       this.setState({ isLoading: true,  error: null});
@@ -52,12 +70,10 @@ export class App extends Component {
             } 
             this.loadMoreButtonView(responce.hits);
         }
-
         catch (e) {
             console.log(e);
       this.setState({error: 'Попробуй перезагрузить страницу, может повезет больше'})
         }
-
         finally {
             this.setState({ isLoading: false });
     }
@@ -68,11 +84,13 @@ export class App extends Component {
             <>
                 <GlobalStyle />
                 <Searchbar onSubmit={this.handleSubmitForm} />
-                <ImageGallery images={this.state.images} error={this.state.error} />
+                <ImageGallery images={this.state.images} error={this.state.error} openModal={this.openModal} />
                 {this.state.loadNextPage && (<Button onClick={this.loadMoreByButton}></Button>)}
                 {this.state.isLoading && (<Loader></Loader>)}
-
+                {this.state.modalIsOpen && (<Modal largeImageInfo={this.state.currentImage} closeModal={this.closeModal}></Modal>)}
             </>
         )
     }
 }
+
+

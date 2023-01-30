@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
 
 import {ImageGalleryItem} from '../ImageGalleryItem/ImageGalleryItem'
 import { ImageGalleryList, Error } from './ImageGallery.styled'
 
-export const ImageGallery = ({images, error}) => {
+export const ImageGallery = ({images, error, openModal}) => {
 
     return (
       <div>
@@ -12,7 +11,7 @@ export const ImageGallery = ({images, error}) => {
           images.length > 0 && (
           <ImageGalleryList>
           {images.map((image) => (
-            <ImageGalleryItem key={image.id} image={image}></ImageGalleryItem>
+            <ImageGalleryItem key={image.id} image={image} openModal={openModal}></ImageGalleryItem>
           ))}
           </ImageGalleryList> 
           )}
@@ -21,4 +20,8 @@ export const ImageGallery = ({images, error}) => {
     )
 }
 
-
+ImageGallery.propTypes = {
+  images: PropTypes.array.isRequired,
+  error: PropTypes.string,
+  openModal: PropTypes.func.isRequired,
+}

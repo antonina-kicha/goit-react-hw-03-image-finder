@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
+import {HiOutlineSearch} from 'react-icons/hi'
 import { SearchbarWrapper, SearchForm, SearchFormButton, SearchFormButtonLabel, SearchFormInput } from './Searchbar.styled';
 
 export class Searchbar extends Component {
@@ -27,7 +28,8 @@ export class Searchbar extends Component {
     return (
       <SearchbarWrapper>
   <SearchForm onSubmit={this.handleSubmit}>
-    <SearchFormButton type="submit" >
+          <SearchFormButton type="submit" >
+            <HiOutlineSearch size={24}/>
       <SearchFormButtonLabel >Search</SearchFormButtonLabel>
     </SearchFormButton>
 
@@ -44,3 +46,5 @@ export class Searchbar extends Component {
     )
   }
 }
+
+

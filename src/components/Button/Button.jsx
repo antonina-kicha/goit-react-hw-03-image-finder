@@ -8,3 +8,7 @@ export const Button = ({ onClick }) => {
     </LoadButton>
     )
 }
+
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+}
